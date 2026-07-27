@@ -7,8 +7,7 @@
     <style>
         :root {
             --bg: #060816;
-            --panel: rgba(10, 16, 31, 0.92);
-            --panel-2: #111827;
+            --panel: rgba(10, 16, 31, 0.95);
             --text: #f8fafc;
             --muted: #cbd5e1;
             --accent: #ff2d55;
@@ -25,45 +24,56 @@
             background:
                 radial-gradient(circle at top left, rgba(255, 45, 85, 0.25), transparent 30%),
                 radial-gradient(circle at bottom right, rgba(34, 211, 238, 0.2), transparent 35%),
-                linear-gradient(135deg, var(--bg), #111a2d 60%, #060816);
+                linear-gradient(135deg, var(--bg), #121b31 60%, #060816);
             min-height: 100vh;
             line-height: 1.6;
         }
 
         .hero {
-            padding: 36px 18px 24px;
+            padding: 34px 18px 28px;
         }
 
         .container {
-            max-width: 1250px;
+            max-width: 1280px;
             margin: 0 auto;
+        }
+
+        .brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .brand img {
+            width: min(100%, 540px);
+            height: auto;
+            filter: drop-shadow(0 12px 24px rgba(0,0,0,0.28));
         }
 
         .badge {
             display: inline-block;
             padding: 8px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            font-size: 0.82rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            font-size: 0.8rem;
             letter-spacing: 0.16em;
             text-transform: uppercase;
             color: #fde68a;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         h1 {
-            font-size: clamp(2.1rem, 4vw, 3.2rem);
-            margin: 0 0 8px;
-            letter-spacing: -0.03em;
-            text-shadow: 0 6px 24px rgba(0,0,0,0.28);
+            display: none;
         }
 
         .subtitle {
             font-size: 1rem;
             color: var(--muted);
-            max-width: 760px;
+            max-width: 780px;
             margin: 0 auto 18px;
+            text-align: center;
         }
 
         .btn-row {
@@ -71,7 +81,7 @@
             justify-content: center;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 16px;
+            margin-top: 10px;
         }
 
         .btn {
@@ -90,7 +100,7 @@
 
         .showcase {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
+            grid-template-columns: 1.08fr 0.92fr;
             gap: 22px;
             align-items: start;
             margin-top: 20px;
@@ -286,7 +296,9 @@
     <section class="hero">
         <div class="container">
             <div class="badge">Live • YouTube Creator</div>
-            <h1>Satyam Gamer 999 Official</h1>
+            <div class="brand">
+                <img src="logo.svg" alt="Satyam Gamer 999 logo">
+            </div>
             <p class="subtitle">Gaming, entertainment, shorts aur YouTube content ka stylish digital home — har nayi upload yahan automatic dikhne lagegi.</p>
 
             <div class="btn-row">
@@ -363,53 +375,58 @@
             return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`;
         }
 
-        fetch(channelFeedUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (!data.items || !data.items.length) throw new Error('No items');
+        function loadFeed() {
+            fetch(channelFeedUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.items || !data.items.length) throw new Error('No items');
 
-                const items = data.items.filter(item => item.link);
-                const latest = items[0];
-                const latestVideoId = extractVideoId(latest.link);
+                    const items = data.items.filter(item => item.link);
+                    const latest = items[0];
+                    const latestVideoId = extractVideoId(latest.link);
 
-                if (featuredFrame && latestVideoId) {
-                    featuredFrame.src = buildEmbedUrl(latestVideoId);
-                }
+                    if (featuredFrame && latestVideoId) {
+                        featuredFrame.src = buildEmbedUrl(latestVideoId);
+                    }
 
-                if (feedList) {
-                    feedList.innerHTML = '';
-                    items.slice(0, 6).forEach(item => {
-                        const videoId = extractVideoId(item.link);
-                        const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
-                        const safeTitle = escapeHtml(item.title || 'YouTube content');
-                        const safeLink = escapeHtml(item.link);
-                        const safeLabel = escapeHtml(getVideoLabel(item.link));
+                    if (feedList) {
+                        feedList.innerHTML = '';
+                        items.slice(0, 12).forEach(item => {
+                            const videoId = extractVideoId(item.link);
+                            const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
+                            const safeTitle = escapeHtml(item.title || 'YouTube content');
+                            const safeLink = escapeHtml(item.link);
+                            const safeLabel = escapeHtml(getVideoLabel(item.link));
 
-                        const card = document.createElement('div');
-                        card.className = 'feed-item';
-                        card.innerHTML = `
-                            <div class="feed-thumb">
-                                ${thumb ? `<img src="${thumb}" alt="${safeTitle}">` : ''}
-                            </div>
-                            <div class="feed-info">
-                                <span class="tag">${safeLabel}</span>
-                                <strong>${safeTitle}</strong>
-                                <a href="${safeLink}" target="_blank" rel="noopener noreferrer">Watch now</a>
-                            </div>
-                        `;
-                        feedList.appendChild(card);
-                    });
-                }
+                            const card = document.createElement('div');
+                            card.className = 'feed-item';
+                            card.innerHTML = `
+                                <div class="feed-thumb">
+                                    ${thumb ? `<img src="${thumb}" alt="${safeTitle}">` : ''}
+                                </div>
+                                <div class="feed-info">
+                                    <span class="tag">${safeLabel}</span>
+                                    <strong>${safeTitle}</strong>
+                                    <a href="${safeLink}" target="_blank" rel="noopener noreferrer">Watch now</a>
+                                </div>
+                            `;
+                            feedList.appendChild(card);
+                        });
+                    }
 
-                if (feedStatus) {
-                    feedStatus.textContent = 'Latest uploads and shorts are shown automatically from your channel.';
-                }
-            })
-            .catch(() => {
-                if (feedStatus) {
-                    feedStatus.textContent = 'Unable to load your latest videos right now. Please refresh the page.';
-                }
-            });
+                    if (feedStatus) {
+                        feedStatus.textContent = 'Latest uploads and shorts are shown automatically from your channel.';
+                    }
+                })
+                .catch(() => {
+                    if (feedStatus) {
+                        feedStatus.textContent = 'Unable to load your latest videos right now. Please refresh the page.';
+                    }
+                });
+        }
+
+        loadFeed();
+        setInterval(loadFeed, 600000);
     </script>
 </body>
 </html>

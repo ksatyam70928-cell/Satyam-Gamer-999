@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="220" viewBox="0 0 700 220">
+  <rect width="700" height="220" rx="34" fill="#060816"/>
+  <rect x="22" y="22" width="656" height="176" rx="28" fill="url(#bg)" stroke="#2dd4bf" stroke-opacity="0.35"/>
+  <circle cx="132" cy="110" r="52" fill="#ff2d55"/>
+  <path d="M104 94h56v32h-56z" fill="#fff" opacity="0.95"/>
+  <path d="M116 86h32v16h-32z" fill="#ffd166"/>
+  <path d="M114 128h14v16h-14z" fill="#38bdf8"/>
+  <path d="M136 128h14v16h-14z" fill="#38bdf8"/>
+  <path d="M158 128h14v16h-14z" fill="#38bdf8"/>
+  <path d="M188 92h24v10h-24z" fill="#f8fafc" opacity="0.9"/>
+  <path d="M188 112h34v10h-34z" fill="#f8fafc" opacity="0.9"/>
+  <text x="220" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="38" font-weight="700" fill="#f8fafc">Satyam Gamer 999</text>
+  <text x="220" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#22d3ee">Official Gaming Hub • Videos • Shorts</text>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111a2d"/>
+      <stop offset="100%" stop-color="#0b1020"/>
+    </linearGradient>
+  </defs>
+</svg>
