@@ -5,72 +5,181 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Satyam Gamer 999 Official</title>
     <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --accent: #ff0000;
+            --accent2: #f59e0b;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #f8fafc;
+            background: linear-gradient(135deg, var(--bg), #1e293b);
+            color: var(--text);
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
+        .hero {
+            padding: 40px 20px 20px;
             text-align: center;
         }
 
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
         }
 
-        p {
+        .card {
+            background: rgba(17, 24, 39, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            margin: 0 0 10px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 18px;
             font-size: 1rem;
-            margin-bottom: 20px;
-            color: #cbd5e1;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-red { background: var(--accent); }
+        .btn-gold { background: var(--accent2); color: #111; }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+            align-items: start;
         }
 
         iframe {
             width: 100%;
-            max-width: 900px;
-            height: 520px;
+            height: 420px;
             border: none;
+            border-radius: 14px;
+            background: #000;
+        }
+
+        .video-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .video-item {
+            padding: 12px;
+            background: #1f2937;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+        }
+
+        .video-item strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .video-item a {
+            color: #fbbf24;
+            text-decoration: none;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
             margin-top: 10px;
         }
 
-        .button {
-            margin-top: 25px;
+        .social-links a {
+            color: var(--text);
+            text-decoration: none;
+            background: #1f2937;
+            padding: 8px 12px;
+            border-radius: 999px;
         }
 
-        .button a {
-            display: inline-block;
-            text-decoration: none;
-            padding: 12px 24px;
-            background-color: #ff0000;
-            color: white;
-            border-radius: 8px;
-            font-weight: bold;
+        @media (max-width: 860px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            iframe { height: 300px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Satyam Gamer 999 Official</h1>
-        <p>Apna official gaming, entertainment aur YouTube experience yahan dekhein.</p>
+    <section class="hero">
+        <div class="container">
+            <div class="card">
+                <h1>Satyam Gamer 999 Official</h1>
+                <p class="subtitle">Gaming, entertainment, aur YouTube ka sabse stylish home page — yahan aapko latest videos aur channel links sab kuch milta hai.</p>
 
-        <iframe src="https://www.youtube.com/embed/nEJcs4_USUE?rel=0&modestbranding=1"
-                title="Latest video from Satyam Gamer 999"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
+                <div class="btn-row">
+                    <a class="btn btn-red" href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I" target="_blank" rel="noopener noreferrer">Subscribe on YouTube</a>
+                    <a class="btn btn-gold" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Follow on Instagram</a>
+                </div>
 
-        <div class="button">
-            <a href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I"
-               target="_blank"
-               rel="noopener noreferrer">Visit My YouTube Channel</a>
+                <div class="social-links">
+                    <a href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I" target="_blank" rel="noopener noreferrer">YouTube</a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="video-grid">
+                    <div>
+                        <iframe src="https://www.youtube.com/embed/nEJcs4_USUE?rel=0&modestbranding=1"
+                                title="Latest video from Satyam Gamer 999"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen></iframe>
+                    </div>
+                    <div class="video-list">
+                        <div class="video-item">
+                            <strong>Latest Upload</strong>
+                            <a href="https://www.youtube.com/watch?v=nEJcs4_USUE" target="_blank" rel="noopener noreferrer">Open latest video on YouTube</a>
+                        </div>
+                        <div class="video-item">
+                            <strong>Channel</strong>
+                            <a href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I" target="_blank" rel="noopener noreferrer">Visit full YouTube channel</a>
+                        </div>
+                        <div class="video-item">
+                            <strong>Enjoy</strong>
+                            <a href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I" target="_blank" rel="noopener noreferrer">Watch more gaming and entertainment videos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 </body>
 </html>
