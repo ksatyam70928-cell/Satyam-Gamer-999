@@ -95,20 +95,52 @@
         }
 
         .video-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
             padding: 12px;
             background: #1f2937;
             border-radius: 12px;
             border: 1px solid #334155;
         }
 
-        .video-item strong {
-            display: block;
-            margin-bottom: 6px;
+        .thumb-box {
+            width: 110px;
+            flex-shrink: 0;
         }
 
-        .video-item a {
+        .thumb-box img {
+            width: 100%;
+            border-radius: 8px;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+        }
+
+        .video-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+
+        .video-info strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .video-info a {
             color: #fbbf24;
             text-decoration: none;
+        }
+
+        .tag {
+            display: inline-block;
+            width: fit-content;
+            font-size: 0.75rem;
+            background: #374151;
+            padding: 4px 8px;
+            border-radius: 999px;
+            color: #fef3c7;
         }
 
         .social-links {
@@ -158,28 +190,98 @@
             <div class="card">
                 <div class="video-grid">
                     <div>
-                        <iframe src="https://www.youtube.com/embed/nEJcs4_USUE?rel=0&modestbranding=1"
+                        <iframe id="featured-video" src="https://www.youtube.com/embed/nEJcs4_USUE?rel=0&modestbranding=1"
                                 title="Latest video from Satyam Gamer 999"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowfullscreen></iframe>
                     </div>
-                    <div class="video-list">
-                        <div class="video-item">
-                            <strong>Latest Upload</strong>
-                            <a href="https://www.youtube.com/watch?v=nEJcs4_USUE" target="_blank" rel="noopener noreferrer">Open latest video on YouTube</a>
-                        </div>
-                        <div class="video-item">
-                            <strong>Channel</strong>
-                            <a href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I" target="_blank" rel="noopener noreferrer">Visit full YouTube channel</a>
-                        </div>
-                        <div class="video-item">
-                            <strong>Enjoy</strong>
-                            <a href="https://youtube.com/@satyamgamer999-z5v?si=noNkXk4HtlZ2tE-I" target="_blank" rel="noopener noreferrer">Watch more gaming and entertainment videos</a>
-                        </div>
+                    <div>
+                        <div class="video-list" id="feed-list"></div>
                     </div>
                 </div>
+                <p id="feed-status" class="subtitle" style="margin-top: 16px;">Loading latest uploads from your channel...</p>
             </div>
         </div>
     </section>
+
+    <script>
+        const channelFeedUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCov21gaqZQzYRGRc23NhZsQ');
+        const featuredFrame = document.getElementById('featured-video');
+        const feedList = document.getElementById('feed-list');
+        const feedStatus = document.getElementById('feed-status');
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function extractVideoId(link) {
+            const watchMatch = link.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+            if (watchMatch) return watchMatch[1];
+            const shortMatch = link.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+            if (shortMatch) return shortMatch[1];
+            return null;
+        }
+
+        function getVideoLabel(link) {
+            return link.includes('/shorts/') ? 'Short' : 'Video';
+        }
+
+        function buildEmbedUrl(videoId) {
+            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`;
+        }
+
+        fetch(channelFeedUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.items || !data.items.length) throw new Error('No items');
+
+                const items = data.items.filter(item => item.link);
+                const latest = items[0];
+                const latestVideoId = extractVideoId(latest.link);
+
+                if (featuredFrame && latestVideoId) {
+                    featuredFrame.src = buildEmbedUrl(latestVideoId);
+                }
+
+                if (feedList) {
+                    feedList.innerHTML = '';
+                    items.slice(0, 8).forEach(item => {
+                        const videoId = extractVideoId(item.link);
+                        const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
+                        const safeTitle = escapeHtml(item.title || 'YouTube content');
+                        const safeLink = escapeHtml(item.link);
+                        const safeLabel = escapeHtml(getVideoLabel(item.link));
+
+                        const card = document.createElement('div');
+                        card.className = 'video-item';
+                        card.innerHTML = `
+                            <div class="thumb-box">
+                                ${thumb ? `<img src="${thumb}" alt="${safeTitle}">` : ''}
+                            </div>
+                            <div class="video-info">
+                                <span class="tag">${safeLabel}</span>
+                                <strong>${safeTitle}</strong>
+                                <a href="${safeLink}" target="_blank" rel="noopener noreferrer">Watch now</a>
+                            </div>
+                        `;
+                        feedList.appendChild(card);
+                    });
+                }
+
+                if (feedStatus) {
+                    feedStatus.textContent = 'Latest uploads and shorts are shown automatically from your channel.';
+                }
+            })
+            .catch(() => {
+                if (feedStatus) {
+                    feedStatus.textContent = 'Unable to load your latest videos right now. Please refresh the page.';
+                }
+            });
+    </script>
 </body>
 </html>
