@@ -42,13 +42,44 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: 16px;
             margin-bottom: 16px;
+            flex-wrap: wrap;
         }
 
         .brand img {
             width: min(100%, 540px);
             height: auto;
             filter: drop-shadow(0 12px 24px rgba(0,0,0,0.28));
+        }
+
+        .channel-pill {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 999px;
+            padding: 8px 12px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+        }
+
+        .channel-pill img {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ffd166;
+        }
+
+        .channel-pill strong {
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .channel-pill span {
+            color: var(--muted);
+            font-size: 0.82rem;
         }
 
         .badge {
@@ -275,6 +306,32 @@
             font-size: 0.9rem;
         }
 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 1.05rem;
+            color: white;
+        }
+
+        .stat-card span {
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
         .about-grid,
         .contact-grid {
             display: grid;
@@ -346,6 +403,13 @@
             <div class="badge">Live • YouTube Creator</div>
             <div class="brand">
                 <img src="logo.svg" alt="Satyam Gamer 999 logo">
+                <div class="channel-pill">
+                    <img src="https://yt3.googleusercontent.com/UFtbHK_yuXgqn1wgXdAMQLt_ww8nznPzEdLr4k8J4Lp-Ug4ZwHAx3eKuADanIctN07fUQptlqxg=s900-c-k-c0x00ffffff-no-rj" alt="Satyam Gamer 999 channel avatar">
+                    <div>
+                        <strong>Satyam Gamer 999</strong>
+                        <span>Gaming • Shorts • Entertainment</span>
+                    </div>
+                </div>
             </div>
             <p class="subtitle">Gaming, entertainment, shorts aur YouTube content ka stylish digital home — har nayi upload yahan automatic dikhne lagegi.</p>
 
@@ -380,6 +444,11 @@
 
                 <div class="panel">
                     <h3 style="margin-top: 0;">Latest uploads & shorts</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card"><strong id="stat-total">0</strong><span>Content shown</span></div>
+                        <div class="stat-card"><strong id="stat-videos">0</strong><span>Videos</span></div>
+                        <div class="stat-card"><strong id="stat-shorts">0</strong><span>Shorts</span></div>
+                    </div>
                     <div id="feed-list" class="feed-list"></div>
                     <p id="feed-status">Loading latest uploads from your channel...</p>
                     <div class="social-links">
@@ -431,6 +500,9 @@
         const feedList = document.getElementById('feed-list');
         const galleryList = document.getElementById('gallery-list');
         const feedStatus = document.getElementById('feed-status');
+        const statTotal = document.getElementById('stat-total');
+        const statVideos = document.getElementById('stat-videos');
+        const statShorts = document.getElementById('stat-shorts');
 
         function escapeHtml(value) {
             return String(value)
@@ -471,9 +543,13 @@
                         featuredFrame.src = buildEmbedUrl(latestVideoId);
                     }
 
+                    if (statTotal) statTotal.textContent = items.length;
+                    if (statVideos) statVideos.textContent = items.filter(item => !item.link.includes('/shorts/')).length;
+                    if (statShorts) statShorts.textContent = items.filter(item => item.link.includes('/shorts/')).length;
+
                     if (feedList) {
                         feedList.innerHTML = '';
-                        items.slice(0, 8).forEach(item => {
+                        items.slice(0, 12).forEach(item => {
                             const videoId = extractVideoId(item.link);
                             const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
                             const safeTitle = escapeHtml(item.title || 'YouTube content');
@@ -498,7 +574,7 @@
 
                     if (galleryList) {
                         galleryList.innerHTML = '';
-                        items.slice(0, 6).forEach(item => {
+                        items.slice(0, 12).forEach(item => {
                             const videoId = extractVideoId(item.link);
                             const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
                             const safeTitle = escapeHtml(item.title || 'YouTube content');
