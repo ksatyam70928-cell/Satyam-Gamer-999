@@ -275,6 +275,54 @@
             font-size: 0.9rem;
         }
 
+        .about-grid,
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .info-box h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .gallery-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 10px;
+        }
+
+        .gallery-card img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .gallery-card a {
+            color: #ffd166;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
         #feed-status {
             margin-top: 12px;
             font-size: 0.9rem;
@@ -341,6 +389,39 @@
                     </div>
                 </div>
             </div>
+
+            <div class="panel" style="margin-top: 20px;">
+                <h3 style="margin-top: 0;">About</h3>
+                <div class="about-grid">
+                    <div class="info-box">
+                        <h3>Who am I?</h3>
+                        <p>Satyam Gamer 999 ek gaming aur entertainment creator hai jo YouTube par apne fans ke saath entertaining content share karta hai.</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>What you will find</h3>
+                        <p>Gaming videos, shorts, entertainment content aur latest updates sab kuch ek jagah par.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top: 20px;">
+                <h3 style="margin-top: 0;">Contact</h3>
+                <div class="contact-grid">
+                    <div class="info-box">
+                        <h3>Follow</h3>
+                        <p>Instagram aur Facebook ke liye social links use karo.</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>Watch more</h3>
+                        <p>Apne channel ke latest videos aur shorts ko direct dekho.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top: 20px;">
+                <h3 style="margin-top: 0;">Video Gallery</h3>
+                <div id="gallery-list" class="gallery-grid"></div>
+            </div>
         </div>
     </section>
 
@@ -348,6 +429,7 @@
         const channelFeedUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCov21gaqZQzYRGRc23NhZsQ');
         const featuredFrame = document.getElementById('featured-video');
         const feedList = document.getElementById('feed-list');
+        const galleryList = document.getElementById('gallery-list');
         const feedStatus = document.getElementById('feed-status');
 
         function escapeHtml(value) {
@@ -391,7 +473,7 @@
 
                     if (feedList) {
                         feedList.innerHTML = '';
-                        items.slice(0, 12).forEach(item => {
+                        items.slice(0, 8).forEach(item => {
                             const videoId = extractVideoId(item.link);
                             const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
                             const safeTitle = escapeHtml(item.title || 'YouTube content');
@@ -411,6 +493,24 @@
                                 </div>
                             `;
                             feedList.appendChild(card);
+                        });
+                    }
+
+                    if (galleryList) {
+                        galleryList.innerHTML = '';
+                        items.slice(0, 6).forEach(item => {
+                            const videoId = extractVideoId(item.link);
+                            const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : (item.thumbnail || '');
+                            const safeTitle = escapeHtml(item.title || 'YouTube content');
+                            const safeLink = escapeHtml(item.link);
+                            const card = document.createElement('div');
+                            card.className = 'gallery-card';
+                            card.innerHTML = `
+                                ${thumb ? `<img src="${thumb}" alt="${safeTitle}">` : ''}
+                                <strong>${safeTitle}</strong><br>
+                                <a href="${safeLink}" target="_blank" rel="noopener noreferrer">Open on YouTube</a>
+                            `;
+                            galleryList.appendChild(card);
                         });
                     }
 
